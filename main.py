@@ -123,3 +123,25 @@ async def count_tokens_tiktoken(data: UploadFile = File(...), model: str = "gpt-
         })
     finally:
         os.remove(tmp_path)
+
+@app.post("/count-tokens/tiktokenv2")
+async def count_tokens_tiktoken(data: UploadFile = File(...), model: str = "gpt-4"):
+
+    try:
+        file = data
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            content = await file.read()
+            tmp.write(content)
+            tmp_path = tmp.name
+
+        text = get_text_from_file(tmp_path, file.filename)
+        token_count = count_tokens_with_tiktoken(text, model_name=model)
+
+        return JSONResponse({
+            "filename": file.filename,
+            "model": "Proprietary Models",
+            "token_count": token_count
+        })
+    finally:
+        os.remove(tmp_path)
+
