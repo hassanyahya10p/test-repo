@@ -24,6 +24,16 @@ def extract_text_from_pdf(path: str) -> str:
     return "\n".join(text)
 
 
+
+def extract_text_from_pdf_v2(path: str) -> str:
+    text = []
+    doc = fitz.open(path)
+    for page in doc:
+        text.append(page.get_text())
+    return "\n".join(text)
+
+
+
 def extract_text_from_docx(path: str) -> str:
     doc = docx.Document(path)
     return "\n".join([para.text for para in doc.paragraphs])
@@ -144,4 +154,5 @@ async def count_tokens_tiktoken(data: UploadFile = File(...), model: str = "gpt-
         })
     finally:
         os.remove(tmp_path)
+
 
