@@ -49,6 +49,15 @@ def extract_text_from_xlsx(path: str) -> str:
                     text.append(str(cell))
     return "\n".join(text)
 
+def extract_text_from_xlsx_v2(path: str) -> str:
+    wb = openpyxl.load_workbook(path, data_only=True)
+    text = []
+    for sheet in wb.worksheets:
+        for row in sheet.iter_rows(values_only=True):
+            for cell in row:
+                if cell:
+                    text.append(str(cell))
+    return "\n".join(text)
 
 def get_text_from_file(file_path: str, filename: str) -> str:
     ext = filename.lower().split(".")[-1]
@@ -154,5 +163,6 @@ async def count_tokens_tiktoken(data: UploadFile = File(...), model: str = "gpt-
         })
     finally:
         os.remove(tmp_path)
+
 
 
